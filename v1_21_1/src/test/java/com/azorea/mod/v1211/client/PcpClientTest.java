@@ -70,7 +70,7 @@ class PcpClientTest {
         assertEquals(192, req[20] & 0xFF);
         assertEquals(168, req[21] & 0xFF);
         assertEquals(1, req[22] & 0xFF);
-        assertEquals(94, req[23] & 0xFF);
+        assertEquals(50, req[23] & 0xFF);
     }
 
     @Test

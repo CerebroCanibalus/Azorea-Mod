@@ -101,7 +101,7 @@ final class NatPmpClientTest {
         assertEquals("10.0.0.1",
                 NatPmpClient.parseExternalAddress(okExternalIp(10, 0, 0, 1)));
         assertEquals("203.0.113.9",
-                NatPmpClient.parseExternalAddress(okExternalIp(189, 230, 129, 102)));
+                NatPmpClient.parseExternalAddress(okExternalIp(203, 0, 113, 9)));
     }
 
     @Test
