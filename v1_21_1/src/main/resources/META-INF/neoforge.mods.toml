@@ -8,7 +8,7 @@ license="GPL-3.0"
 
 [[mods]]
 modId="azorea"
-version="1.4.10"
+version="1.4.11"
 displayName="Azorea"
 authors="General Beria"
 description='''Azorea. Multijugador gratuito, seguro y privado.'''

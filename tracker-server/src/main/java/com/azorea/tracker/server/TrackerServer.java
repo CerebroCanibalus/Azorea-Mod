@@ -72,9 +72,21 @@ public final class TrackerServer {
     private static final int SWEEPER_PERIOD_SECONDS = 30;
     private static final int RATE_LIMIT_PER_HOUR = 60;
 
+    // § Audit 2026-10-07: tope de body por handler. Lo q/ NO cabe cabe ⇒ 400, no
+    //   intentar parsear basura y reventar memoria.
+    private static final int MAX_BODY_SMALL = 8 * 1024;        // /announce, /presence, /invite, /punch/clear
+    private static final int MAX_BODY_PUNCH = 64 * 1024;      // /punch/announce (payload firmado Ed25519)
+
     private final int port;
     private final int relayPort;
     private final Path dataFile;
+    /**
+     * § Audit 2026-10-07: si true, se honra {@code X-Forwarded-For} para clientIp().
+     *   Peligro: si el tracker está expuesto SIN un reverse proxy de confianza, un
+     *   atacante puede falsificar la IP y bypasear el rate limit per-IP.
+     *   Por default false (sólo se usa la dirección del socket TCP real).
+     */
+    private final boolean trustForwardedFor;
     private final Map<String, Entry> games = new ConcurrentHashMap<>();
     /** gameId → (azoreaId → Identity) para players actualmente en el game. */
     private final Map<String, Map<String, TrackerProtocol.Identity>> presences = new ConcurrentHashMap<>();
@@ -89,13 +101,19 @@ public final class TrackerServer {
     private RelayServer relayServer;
 
     public TrackerServer(final int port, final Path dataFile) {
-        this(port, dataFile, 0); // sin relay por defecto
+        this(port, dataFile, 0, false); // sin relay, sin trust_forwarded_for
     }
 
     public TrackerServer(final int port, final Path dataFile, final int relayPort) {
+        this(port, dataFile, relayPort, false);
+    }
+
+    public TrackerServer(final int port, final Path dataFile, final int relayPort,
+                         final boolean trustForwardedFor) {
         this.port = port;
         this.dataFile = dataFile;
         this.relayPort = relayPort;
+        this.trustForwardedFor = trustForwardedFor;
     }
 
     public void start() throws IOException {
@@ -793,7 +811,9 @@ public final class TrackerServer {
 
                 final PunchAnnounce in;
                 try {
-                    in = gson.fromJson(readBody(exchange), PunchAnnounce.class);
+                    // § Audit 2026-10-07: cap explícito de 64 KB — el payload firmado
+                    //   (signed JSON d/ AzoreaPunchExchange.Endpoint) cabe holgado.
+                    in = gson.fromJson(readBody(exchange, MAX_BODY_PUNCH), PunchAnnounce.class);
                 } catch (Exception e) {
                     respondJson(exchange, 400,
                             new TrackerProtocol.ErrorResponse("invalid", e.getMessage()));
@@ -967,7 +987,43 @@ public final class TrackerServer {
     }
 
     private static String readBody(final HttpExchange exchange) throws IOException {
-        return new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
+        return readBody(exchange, MAX_BODY_SMALL);
+    }
+
+    /**
+     * Lee el body c/ tope duro de bytes. Defense-in-depth contra DoS por body grande:
+     * rechazar upfront si Content-Length declara más del tope, y leer como máximo
+     * {@code maxBytes + 1} para detectar overflow real. Devuelve la cadena UTF-8.
+     */
+    private static String readBody(final HttpExchange exchange, final int maxBytes) throws IOException {
+        // (1) Rechazo upfront por Content-Length — ahorra leer.
+        final var cl = exchange.getRequestHeaders().getFirst("Content-Length");
+        if (cl != null && !cl.isBlank()) {
+            try {
+                final long declared = Long.parseLong(cl.trim());
+                if (declared > maxBytes) {
+                    throw new IllegalArgumentException(
+                            "body demasiado grande: " + declared + " > " + maxBytes + " bytes");
+                }
+            } catch (final NumberFormatException ignored) {
+                // CL ausente o malformado ⇒ caemos al cap real en (2).
+            }
+        }
+        // (2) Cap real — leemos un byte más del máximo; si llega entero, overflow.
+        final byte[] buf = new byte[maxBytes + 1];
+        int total = 0;
+        try (InputStream in = exchange.getRequestBody()) {
+            while (total < buf.length) {
+                final int n = in.read(buf, total, buf.length - total);
+                if (n < 0) break;
+                total += n;
+            }
+        }
+        if (total > maxBytes) {
+            throw new IllegalArgumentException(
+                    "body demasiado grande (> " + maxBytes + " bytes)");
+        }
+        return new String(buf, 0, total, StandardCharsets.UTF_8);
     }
 
     private boolean checkRateLimit(final String ip) {
@@ -990,11 +1046,17 @@ public final class TrackerServer {
     private record RateState(AtomicLong windowStartMs, AtomicInteger count) {
     }
 
-    private static String clientIp(final HttpExchange exchange) {
-        final String forwarded = exchange.getRequestHeaders().getFirst("X-Forwarded-For");
-        if (forwarded != null && !forwarded.isBlank()) {
-            final int comma = forwarded.indexOf(',');
-            return comma >= 0 ? forwarded.substring(0, comma).trim() : forwarded.trim();
+    private String clientIp(final HttpExchange exchange) {
+        // § Audit 2026-10-07: por default NO se confía en X-Forwarded-For. Un atacante
+        //   puede falsificar la cabecera y bypasear el rate limit per-IP. Sólo se
+        //   honra si el operador construyó el TrackerServer con trust_forwarded_for=true
+        //   (ver CLI en TrackerServerMain).
+        if (trustForwardedFor) {
+            final String forwarded = exchange.getRequestHeaders().getFirst("X-Forwarded-For");
+            if (forwarded != null && !forwarded.isBlank()) {
+                final int comma = forwarded.indexOf(',');
+                return comma >= 0 ? forwarded.substring(0, comma).trim() : forwarded.trim();
+            }
         }
         final var remote = exchange.getRemoteAddress();
         return remote != null ? remote.getAddress().getHostAddress() : "unknown";
