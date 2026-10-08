@@ -1,0 +1,25 @@
+// Root build.gradle: configuración común a todos los subproyectos.
+allprojects {
+    group = 'com.azorea'
+    version = project.findProperty('mod_version') ?: '0.1.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+        maven { url = 'https://maven.neoforged.net/releases' }
+        maven { url = 'https://maven.parchmentmc.org' }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        options.release = 21
+    }
+}
+
+// Tarea placeholder para que `gradle tasks` muestre el árbol correctamente.
+tasks.register('hello') {
+    group = 'azorea'
+    description = 'Tarea placeholder; usar ./gradlew :v1_21_1:build en su lugar.'
+    doLast {
+        println 'Azorea — ver ./gradlew :v1_21_1:build'
+    }
+}

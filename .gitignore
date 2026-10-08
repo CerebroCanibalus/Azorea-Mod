@@ -1,0 +1,56 @@
+﻿# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.vs/
+.classpath
+.project
+.settings/
+bin/
+*.launch
+
+# NeoForge / Minecraft
+run/
+*.log
+crash-reports/
+saves/
+
+# Python caches
+__pycache__/
+*.pyc
+
+# Secrets (per AGENTS.md seguridad)
+*.key
+*.pem
+*.p12
+secrets.toml
+local.properties
+
+# Bootstrap artifacts
+.gradle-dist/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+
+# Artifacts ajenos / sensibles
+.heren/
+vps/
+test-server/
+
+# Backups automaticos del editor
+*.bak
+*~
+*.swp

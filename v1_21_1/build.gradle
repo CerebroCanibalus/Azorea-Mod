@@ -1,0 +1,108 @@
+// v1_21_1/build.gradle — glue específico para Minecraft 1.21.1 + NeoForge 52.x.
+// Aplica ModDevGradle, declara la versión de NeoForge, depende de :common.
+
+plugins {
+    id 'net.neoforged.moddev' version '2.0.146'
+}
+
+// § DA-13: código compartido c/ `:tracker-server` (crypto d/ identidad + firma d/ punch).
+// UNA sola copia en disco, compilada en los DOS jars — ⊘ duplicar (el canónico d/ la firma
+// tiene q/ coincidir byte a byte y una copia q/ se desincronice falla EN SILENCIO).
+// ≠ `:common` (DA-3): ésto no es un subproyecto, es un srcDir ⇒ ⊘ arrastra MC/NeoForge.
+sourceSets.main.java.srcDir('../shared/src/main/java')
+
+neoForge {
+    version = project.findProperty('neoForge_version')
+    validateAccessTransformers = true
+
+    runs {
+        client {
+            client()
+            // § F8.x: gameDir aislado para testing 2-client simultáneo en 1 PC.
+            // Cada cliente tiene su propio .minecraft, por tanto su propio Azorea ID,
+            // su propio tracker port, su propio identity.json.
+            gameDirectory = file('run/client1')
+            programArguments = ['--username', 'Dev']
+        }
+        client2 {
+            client()
+            // § F8.x: segundo cliente para testing multi-player en misma máquina.
+            // - gameDir distinto → identity.json distinto → Azorea ID distinto
+            // - username distinto → UUID offline distinto → puede conectar al server junto a client1
+            gameDirectory = file('run/client2')
+            programArguments = ['--username', 'Player2']
+        }
+        clientJoin {
+            client()
+            // § DA-14/N1: cliente q/ se AUTO-CONECTA a localhost:25565.
+            // Verificado en fuentes (QuickPlay.joinMultiplayerWorld): si la IP no está en
+            // servers.dat, crea ServerData(ip) y conecta directo ⇒ hace falta servers.dat.
+            // Uso: probar el pipeline d/ red (codec de compresión, gate F10) sin clicks.
+            gameDirectory = file('run/client1')
+            programArguments = ['--username', 'Dev', '--quickPlayMultiplayer', 'localhost']
+        }
+        debugWorld {
+            client()
+            // § Rediseño d/ pantalla d/ hosteo: carga un mundo YA EXISTENTE (quickPlay) p/
+            //   ver la pantalla c/ el selector d/ acceso ACTIVO y los defaults REALES
+            //   (mundo, dificultad, PvP, vuelo) en vez d/ los genéricos d/ s/ mundo.
+            //   Uso: `$env:AZOREA_DEBUG_SCREEN='host'; ./gradlew :v1_21_1:runDebugWorld`
+            //   ⚠ gameDirectory='run' — es el q/ tiene saves/New World (client1 no tiene).
+            //   ⚠ run/mods está VACÍO ⇒ ⊘ riesgo d/ modId duplicado.
+            gameDirectory = file('run')
+            programArguments = ['--username', 'Dev', '--quickPlaySingleplayer', 'New World']
+        }
+        server {
+            server()
+            gameDirectory = file('run/server')
+        }
+        data {
+            data()
+        }
+    }
+
+    mods {
+        azorea {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+dependencies {
+    // TODO F2: reintroducir ':common' cuando haya 2 versiones y la abstracción se justifique.
+    // implementation project(':common')
+
+    // § F5.2b: tests unitarios para crypto (AzoreaCryptoTest).
+    // JUnit 5 + launcher (mismo setup que tracker-server).
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.0'
+    // SLF4J es transitivo de NeoForge en runtime, pero los tests NO heredan
+    // el runtime classpath de main (ModDevGradle quirk). Lo añadimos explícito.
+    testRuntimeOnly 'org.slf4j:slf4j-api:2.0.9'
+    testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.9'
+    // § F9: mismo quirk con Gson — TrackerProtocol.<clinit> lo necesita y sin esto
+    // los tests que lo tocan fallan con NoClassDefFoundError: com/google/gson/GsonBuilder.
+    // Versión alineada con la que usa :tracker-server.
+    // § 2026-10-01: testRuntimeOnly → **testImplementation** — PunchMailboxE2ETest
+    // IMPORTA Gson (construye el envoltorio del announce). `testRuntimeOnly` no llega al
+    // classpath de COMPILACIÓN ⇒ `compileTestJava` fallaba con "package com.google.gson
+    // does not exist". `testImplementation` da compile Y runtime (runtimeClasspath lo
+    // hereda) ⇒ misma dependencia, ámbito correcto.
+    testImplementation 'com.google.code.gson:gson:2.11.0'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+        showStandardStreams = false
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+// Configuración UTF-8 ya viene del root build.gradle (allprojects).

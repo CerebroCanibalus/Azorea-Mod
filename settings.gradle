@@ -1,0 +1,23 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        maven { url = 'https://maven.neoforged.net/releases' }
+        mavenCentral()
+    }
+}
+
+plugins {
+    // Auto-downloads JDK 21 (and 17 when needed) from Adoptium on first build.
+    // v1.0.0 (mayo 2025) elimina referencias a JvmVendorSpec.IBM_SEMERU y es compatible c/ Gradle 9.
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+rootProject.name = 'azorea'
+
+// Subproyectos del mod.
+// F1: solo :v1_21_1. :common se reintroducirá en F2 cuando haya 2 versiones y se justifique la abstracción.
+// :tracker-server es la app standalone del tracker (F2.2); no es parte del mod.
+include ':v1_21_1'
+include ':tracker-server'
+// include ':common'   // re-añadir en F2 si hay justificación (ver § Decisiones arquitectónicas DA-2)
+// include ':v1_20_1'   // activar en F2/F3 cuando se necesite

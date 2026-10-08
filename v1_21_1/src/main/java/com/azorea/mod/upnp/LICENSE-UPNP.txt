@@ -1,0 +1,20 @@
+UPnP Gateway code in this package (Gateway.java, GatewayFinder.java) is derived
+from the miniupnpc library by Federico Dossena (adolfintel.com), licensed under
+the GNU Lesser General Public License version 2.1 (LGPL-2.1).
+
+Source: https://github.com/Gaming32/world-host (which itself vendored it)
+Original library: https://miniupnp.tuxfamily.org/
+
+The rest of the files in this package (UPnPErrors.java) are derived from
+World Host (https://github.com/Gaming32/world-host), licensed under the MIT
+License, Copyright (c) 2023 Gaming32.
+
+Modifications by Azorea (C) 2026 General Beria, GPL-3.0-only:
+- Package renamed: io.github.gaming32.worldhost.upnp → com.azorea.mod.upnp
+- fastutil (Int2ObjectLinkedOpenHashMap) replaced with java.util.HashMap
+- "WorldHost" port mapping description renamed to "Azorea"
+- Added closePort() method for cleanup on host stop
+
+LGPL-2.1 is compatible with GPL-3.0 when the LGPL code is combined into a
+GPL-3.0 project (per LGPL-2.1 section 3). The combined work is distributed
+under GPL-3.0, and the LGPL portions retain their original notices.

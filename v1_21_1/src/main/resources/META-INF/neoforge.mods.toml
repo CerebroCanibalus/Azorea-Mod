@@ -1,0 +1,32 @@
+# Azorea — descriptor del mod para NeoForge.
+# Valores sincronizados con gradle.properties. Si cambias gradle.properties, actualiza también este archivo.
+# TODO F3: automatizar la sustitución vía tarea Gradle (processResources c/ filter) para evitar drift.
+
+modLoader="javafml"
+loaderVersion="[1,)"
+license="GPL-3.0"
+
+[[mods]]
+modId="azorea"
+version="1.4.10"
+displayName="Azorea"
+authors="General Beria"
+description='''Azorea. Multijugador gratuito, seguro y privado.'''
+logoFile="azorea_logo.png"
+
+[[dependencies.azorea]]
+    modId="neoforge"
+    type="required"
+    versionRange="[21.1,)"
+    ordering="NONE"
+    side="BOTH"
+
+# Nota: `loaderVersion` arriba es la versión de javafml (lenguaje del mod),
+# NO de NeoForge. La versión d/ NeoForge se controla vía la dep `neoforge` aquí abajo.
+
+[[dependencies.azorea]]
+    modId="minecraft"
+    type="required"
+    versionRange="1.21.1"
+    ordering="NONE"
+    side="BOTH"
