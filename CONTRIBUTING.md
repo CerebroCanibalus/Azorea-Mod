@@ -4,20 +4,20 @@ Thank you for your interest in contributing. Azorea is a free, GPL-3.0-licensed 
 
 ## Reporting bugs
 
-File a [bug report](https://github.com/CerebroCanibalus/azorea/issues/new?template=bug_report.md). Use the **Place** if you can reproduce on a vanilla 1.21.1 server with only Azorea installed.
+File a [bug report](https://github.com/CerebroCanibalus/Azorea-Mod/issues/new?template=bug_report.md). Use the **Place** if you can reproduce on a vanilla 1.21.1 server with only Azorea installed.
 
 **Security issues**: do NOT file public issues. Use GitHub Security Advisories (see [SECURITY.md](SECURITY.md)).
 
 ## Proposing features
 
-Open a [feature request](https://github.com/CerebroCanibalus/azorea/issues/new?template=feature_request.md) describing the use case, not the implementation. The maintainers will weigh it against the project's design constraints (listed below).
+Open a [feature request](https://github.com/CerebroCanibalus/Azorea-Mod/issues/new?template=feature_request.md) describing the use case, not the implementation. The maintainers will weigh it against the project's design constraints (listed below).
 
 ## Submitting changes
 
 1. Fork the repo, create a topic branch (`fix/<thing>`, `feat/<thing>`, etc).
 3. Keep the build green: `./gradlew :v1_21_1:test` (249 tests, 0 failures expected).
 4. Run the bundled linter / formatter if one is configured.
-5. Open a [pull request](https://github.com/CerebroCanibalus/azorea/compare). Use the PR template.
+5. Open a [pull request](https://github.com/CerebroCanibalus/Azorea-Mod/compare). Use the PR template.
 
 ## Design constraints to know before contributing
 

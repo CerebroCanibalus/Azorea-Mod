@@ -4,7 +4,7 @@
 
 Azorea opens your singleplayer world to a friend across the internet and connects the two machines **directly**. When it works, your chunks travel straight to your friend's game, not through a server either of you has to trust, rent or sign into. It is the same save you already play, and the same person you already know.
 
-[![GitHub release](https://img.shields.io/github/v/release/CerebroCanibalus/azorea?label=release)](https://github.com/CerebroCanibalus/azorea/releases)
+[![GitHub release](https://img.shields.io/github/v/release/CerebroCanibalus/Azorea-Mod?label=release)](https://github.com/CerebroCanibalus/Azorea-Mod/releases)
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
 [![Modrinth](https://img.shields.io/badge/Modrinth-coming%20soon-lightgrey)](#where-to-get-it)
 [![CurseForge](https://img.shields.io/badge/CurseForge-coming%20soon-lightgrey)](#where-to-get-it)
@@ -37,7 +37,7 @@ Azorea takes the other road. It connects the two machines **directly**, and keep
 
 - **Modrinth** — coming soon <!-- TODO: https://modrinth.com/mod/azorea -->
 - **CurseForge** — coming soon <!-- TODO: https://www.curseforge.com/minecraft/mc-mods/azorea -->
-- **GitHub Releases** — [latest jar](https://github.com/CerebroCanibalus/azorea/releases)
+- **GitHub Releases** — [latest jar](https://github.com/CerebroCanibalus/Azorea-Mod/releases)
 
 You need Minecraft 1.21.1 and NeoForge 21.1.250 or newer. Drop the jar in your `mods/` folder. You know the rest.
 
@@ -111,7 +111,7 @@ The full security model, its assumptions and its limitations live in [SECURITY.m
 You need **JDK 21** and Git; Gradle arrives with the wrapper.
 
 ```bash
-git clone https://github.com/CerebroCanibalus/azorea
+git clone https://github.com/CerebroCanibalus/Azorea-Mod
 cd azorea
 
 ./gradlew :v1_21_1:build         # the mod      → v1_21_1/build/libs/

@@ -4,7 +4,7 @@
 
 Azorea abre tu mundo de un jugador a un amigo por internet y conecta las dos máquinas **en directo**. Cuando funciona, tus chunks viajan derechitos al juego de tu amigo, no por un servidor que alguno de los dos tenga que confiar, alquilar o en el que tenga que entrar. Es el mismo mundo que ya juegas, y la misma persona que ya conoces.
 
-[![GitHub release](https://img.shields.io/github/v/release/CerebroCanibalus/azorea?label=release)](https://github.com/CerebroCanibalus/azorea/releases)
+[![GitHub release](https://img.shields.io/github/v/release/CerebroCanibalus/Azorea-Mod?label=release)](https://github.com/CerebroCanibalus/Azorea-Mod/releases)
 [![Licencia: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
 [![Modrinth](https://img.shields.io/badge/Modrinth-pr%C3%B3ximamente-lightgrey)](#d%C3%B3nde-conseguirlo)
 [![CurseForge](https://img.shields.io/badge/CurseForge-pr%C3%B3ximamente-lightgrey)](#d%C3%B3nde-conseguirlo)
@@ -37,7 +37,7 @@ Azorea va por el otro camino. Conecta las dos máquinas **en directo** y deja lo
 
 - **Modrinth** — próximamente <!-- TODO: https://modrinth.com/mod/azorea -->
 - **CurseForge** — próximamente <!-- TODO: https://www.curseforge.com/minecraft/mc-mods/azorea -->
-- **GitHub Releases** — [último jar](https://github.com/CerebroCanibalus/azorea/releases)
+- **GitHub Releases** — [último jar](https://github.com/CerebroCanibalus/Azorea-Mod/releases)
 
 Necesitas Minecraft 1.21.1 y NeoForge 21.1.250 o superior. Suelta el jar en tu carpeta `mods/`. Lo demás ya te lo sabes.
 
@@ -111,7 +111,7 @@ El modelo de seguridad completo, sus supuestos y sus límites están en [SECURIT
 Necesitas **JDK 21** y Git; Gradle llega con el wrapper.
 
 ```bash
-git clone https://github.com/CerebroCanibalus/azorea
+git clone https://github.com/CerebroCanibalus/Azorea-Mod
 cd azorea
 
 ./gradlew :v1_21_1:build         # el mod      → v1_21_1/build/libs/
