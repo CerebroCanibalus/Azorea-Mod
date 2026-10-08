@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/azorea_banner-export.png" alt="Azorea — true peer-to-peer multiplayer for Minecraft" width="550">
+</p>
+
 # Azorea
 
 **A real, automated and easy to use peer-to-peer multiplayer and hosting mod for Minecraft 1.21.1 with no account, free forever.**

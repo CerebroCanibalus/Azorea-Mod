@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/azorea_banner-export.png" alt="Azorea — multijugador peer-to-peer para Minecraft" width="550">
+</p>
+
 # Azorea
 
 **Un mod de multijugador y hosteo peer-to-peer real, automatizado y fácil de usar para Minecraft 1.21.1, sin cuenta y gratis para siempre.**
