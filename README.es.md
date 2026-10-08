@@ -2,8 +2,6 @@
   <img src="assets/azorea_banner-export.png" alt="Azorea — multijugador peer-to-peer para Minecraft" width="550">
 </p>
 
-# Azorea
-
 **Un mod de multijugador y hosteo peer-to-peer real, automatizado y fácil de usar para Minecraft 1.21.1, sin cuenta y gratis para siempre.**
 
 Azorea abre tu mundo de un jugador a un amigo por internet y conecta las dos máquinas **en directo**. Tus chunks viajan derechitos al juego de tu amigo, no por un servidor que alguno de los dos tenga que confiar, alquilar o en el que tenga que entrar. Es el mismo mundo que ya juegas, y la misma persona que ya conoces.
