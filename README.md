@@ -1,10 +1,8 @@
 # Azorea
 
-*Direct multiplayer for Minecraft 1.21.1, without a server we run.*
+**True peer-to-peer multiplayer for Minecraft 1.21.1 — no account, no central server, no relay.**
 
-Azorea is a NeoForge mod that connects two singleplayer worlds over the internet. You host the world you already play, your friend pastes a single string, and — when the networks allow it — the two machines talk to each other directly, with nothing of ours sitting between them.
-
-There is no account to create and no server we keep running. That last point shapes everything else in the mod. Because there is no infrastructure on our side, there is nothing that can go down, change hands, or start charging for something it used to do for free.
+Azorea opens your singleplayer world to a friend across the internet and connects the two machines **directly**. When it works, your chunks travel straight to your friend's game, not through a server either of you has to trust, rent or sign into. It is the same save you already play, and the same person you already know.
 
 [![GitHub release](https://img.shields.io/github/v/release/CerebroCanibalus/azorea?label=release)](https://github.com/CerebroCanibalus/azorea/releases)
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
@@ -12,6 +10,28 @@ There is no account to create and no server we keep running. That last point sha
 [![CurseForge](https://img.shields.io/badge/CurseForge-coming%20soon-lightgrey)](#where-to-get-it)
 
 *¿Prefieres español? → [README.es.md](README.es.md)*
+
+## Why you'd use it
+
+Most ways to play Minecraft with a friend put a server in the middle. Your game goes out to a machine someone else runs — a paid host, or a service that wants an account — and from there to your friend. That server sees your traffic, adds a hop of latency, and can disappear the day its operator decides to close it.
+
+Azorea takes the other road. It connects the two machines **directly**, and keeps as little as possible between them:
+
+- **No account.** Identity is a keypair on your disk, not a login you have to remember or hand to someone.
+- **No relay in the middle.** A direct connection is faster than one bounced through a third party, and your traffic goes from you to your friend and nowhere else.
+- **No server of ours.** There is nothing we want to run in the middle of your game, so there is nothing on our side that can go down, change hands or start charging.
+- **Your world stays yours.** You host the save you already play — nothing is uploaded to anyone.
+- **It plays with free accounts too.** Besides the usual Mojang-verified mode, a world can run in a mode where Azorea proves identity itself, so a friend without a working Minecraft login can still join.
+
+## What it actually does
+
+- **Hosts your existing world over the internet**, not a copy of it.
+- **Finds the network path on its own**: a port-forward you already have, then UPnP, NAT-PMP, PCP, and finally a public IPv6 address.
+- **Punches a direct connection** when no port is open — the two machines still meet, without a relay, using TCP hole punching.
+- **Signs your invitations.** The string you send carries the host's addresses and a signature over them, so you can paste it anywhere and no one in the middle can quietly redirect it.
+- **Discovers games on your LAN** with nothing to configure: install it on both machines and they see each other.
+- **Controls who gets in, per world**, in two modes — premium, checked against Mojang, or no-premium, checked by Azorea — with an identity list the host owns and can edit.
+- **Ships no telemetry, no accounts, and no third-party cryptography.** The whole security model runs on primitives built into the JDK.
 
 ## Where to get it
 
@@ -21,19 +41,11 @@ There is no account to create and no server we keep running. That last point sha
 
 You need Minecraft 1.21.1 and NeoForge 21.1.250 or newer. Drop the jar in your `mods/` folder. You know the rest.
 
-## Why Azorea exists
-
-If you have ever wanted to play Minecraft with one friend, you have met the same three options, and none of them fit a weekend session. You rent a server, which costs money and needs someone to run it. You use a hosting mod or service, which works but usually asks for an account and sends your game through infrastructure somebody else controls. Or you give up and play alone.
-
-Azorea is meant to be a fourth option: two people, one invite, and a connection that belongs to them and to no one else. It is built around a single rule — don't operate anything — and most of the interesting engineering is a consequence of that rule. A mod with no server behind it has to do for itself what a server would otherwise do: identify the players, hand out the invitations, and find a path between two home networks that were never meant to talk to each other.
-
-That choice has a cost, and the project would rather name it than hide it. When two networks genuinely cannot reach each other, no route appears out of nowhere. Where that line falls is spelled out below.
-
 ## Playing with someone
 
 Open a world and press **B**, or click the small **Host** icon in the top-right corner of the pause menu or the title screen. The key can be rebound like any other.
 
-**Host Game** opens the session settings — game mode, difficulty, PvP, flight, cheats, MOTD, and the access mode covered further down. Set it up the way you want the session to play, then press **Start**. When the game is up, **Copy Invite** gives you one string. Send it however you like: Discord, a message, a piece of paper. Your friend presses **B**, chooses **Join by Invite**, pastes it, and connects.
+**Host Game** opens the session settings — game mode, difficulty, PvP, flight, cheats, MOTD, and the access mode covered below. Set it up the way you want the session to play, then press **Start**. When the game is up, **Copy Invite** gives you one string. Send it however you like: Discord, a message, a piece of paper. Your friend presses **B**, chooses **Join by Invite**, pastes it, and connects.
 
 The invitation carries everything needed to reach you, so there is no lobby to search and no third party involved. Whoever has the string has the way in.
 

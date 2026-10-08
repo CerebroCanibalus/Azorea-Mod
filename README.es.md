@@ -1,10 +1,8 @@
 # Azorea
 
-*Multijugador directo para Minecraft 1.21.1, sin un servidor que mantengamos.*
+*Multijugador peer-to-peer de verdad para Minecraft 1.21.1 — sin cuenta, sin servidor central, sin relay.*
 
-Azorea es un mod de NeoForge que junta dos mundos de un jugador por internet. Tú abres el mundo que ya juegas, tu amigo pega una sola cadena y —cuando la red se deja— las dos máquinas se hablan en directo, sin nada nuestro en medio.
-
-No hay cuenta que crear ni servidor nuestro encendido. Eso último condiciona todo lo demás: como de nuestro lado no hay infraestructura, tampoco hay nada que se pueda caer, cambiar de manos ni empezar a cobrar por lo que antes hacía gratis.
+Azorea abre tu mundo de un jugador a un amigo por internet y conecta las dos máquinas **en directo**. Cuando funciona, tus chunks viajan derechitos al juego de tu amigo, no por un servidor que alguno de los dos tenga que confiar, alquilar o en el que tenga que entrar. Es el mismo mundo que ya juegas, y la misma persona que ya conoces.
 
 [![GitHub release](https://img.shields.io/github/v/release/CerebroCanibalus/azorea?label=release)](https://github.com/CerebroCanibalus/azorea/releases)
 [![Licencia: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
@@ -13,6 +11,28 @@ No hay cuenta que crear ni servidor nuestro encendido. Eso último condiciona to
 
 *Prefer English? → [README.md](README.md)*
 
+## Por qué te interesaría
+
+Casi todas las formas de jugar a Minecraft con un amigo meten un servidor en medio. Tu partida sale a una máquina que lleva otro —un host de pago, o un servicio que pide una cuenta— y de ahí va a tu amigo. Ese servidor ve tu tráfico, añade un salto de latencia y puede desaparecer el día que a su dueño le apetezca cerrarlo.
+
+Azorea va por el otro camino. Conecta las dos máquinas **en directo** y deja lo mínimo posible entre ellas:
+
+- **Sin cuenta.** La identidad es un par de claves en tu disco, no un login que recordar ni que darle a nadie.
+- **Sin relay en medio.** Una conexión directa es más rápida que una rebotada por un tercero, y tu tráfico va de ti a tu amigo y a ningún otro sitio.
+- **Sin servidor nuestro.** No queremos correr nada en medio de tu partida, así que de nuestro lado no hay nada que se pueda caer, cambiar de manos ni empezar a cobrar.
+- **Tu mundo sigue siendo tuyo.** Hosteas el guardado que ya juegas — no se sube nada a ninguna parte.
+- **También juega con cuentas gratuitas.** Además del modo de siempre verificado por Mojang, un mundo puede funcionar en un modo en el que Azorea demuestra la identidad por su cuenta, para que un amigo sin login de Minecraft funcional pueda entrar igual.
+
+## Lo que hace de verdad
+
+- **Hostea tu mundo existente por internet**, no una copia.
+- **Encuentra el camino de red solo**: un reenvío de puerto que ya tengas, luego UPnP, NAT-PMP, PCP y por último una dirección IPv6 pública.
+- **Perfora una conexión directa** cuando no hay ningún puerto abierto — las dos máquinas se encuentran igual, sin relay, por apertura simultánea de TCP.
+- **Firma tus invitaciones.** La cadena que mandas lleva las direcciones del host y una firma sobre ellas, así que puedes pegarla donde quieras y nadie en medio puede redirigirla a escondidas.
+- **Descubre partidas en tu LAN** sin configurar nada: lo instalas en las dos máquinas y se ven.
+- **Controla quién entra, por mundo**, en dos modos —premium, comprobado contra Mojang, o no-premium, comprobado por Azorea— con una lista de identidades que es del host y que él edita.
+- **No lleva telemetría, ni cuentas, ni criptografía de terceros.** Todo el modelo de seguridad va sobre primitivas del JDK.
+
 ## Dónde conseguirlo
 
 - **Modrinth** — próximamente <!-- TODO: https://modrinth.com/mod/azorea -->
@@ -20,14 +40,6 @@ No hay cuenta que crear ni servidor nuestro encendido. Eso último condiciona to
 - **GitHub Releases** — [último jar](https://github.com/CerebroCanibalus/azorea/releases)
 
 Necesitas Minecraft 1.21.1 y NeoForge 21.1.250 o superior. Suelta el jar en tu carpeta `mods/`. Lo demás ya te lo sabes.
-
-## Por qué existe Azorea
-
-Si alguna vez has querido jugar a Minecraft con un solo amigo, te has encontrado con las mismas tres opciones, y ninguna encaja en una tarde suelta. Alquilas un servidor, que cuesta dinero y necesita a alguien que lo lleve. Usas un mod o un servicio de hosteo, que funciona pero casi siempre pide una cuenta y manda tu partida por infraestructura que controla otro. O te conformas y juegas solo.
-
-Azorea quiere ser una cuarta opción: dos personas, una invitación y una conexión que es de ellos y de nadie más. Está montado sobre una única regla —no operar nada— y casi toda la ingeniería interesante sale de esa regla. Un mod sin servidor detrás tiene que hacer por su cuenta lo que si no haría un servidor: identificar a los jugadores, repartir las invitaciones y encontrar un camino entre dos redes domésticas que nunca estuvieron pensadas para hablarse.
-
-Esa decisión tiene un precio, y el proyecto prefiere nombrarlo antes que esconderlo. Cuando dos redes no se alcanzan de verdad, no aparece una ruta de la nada. Dónde cae esa frontera lo cuento aquí abajo.
 
 ## Jugar con alguien
 
