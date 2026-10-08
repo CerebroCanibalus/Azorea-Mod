@@ -15,7 +15,7 @@ Open a [feature request](https://github.com/CerebroCanibalus/azorea/issues/new?t
 ## Submitting changes
 
 1. Fork the repo, create a topic branch (`fix/<thing>`, `feat/<thing>`, etc).
-3. Keep the build green: `./gradlew :v1_21_1:test` (208 tests, 0 failures expected).
+3. Keep the build green: `./gradlew :v1_21_1:test` (249 tests, 0 failures expected).
 4. Run the bundled linter / formatter if one is configured.
 5. Open a [pull request](https://github.com/CerebroCanibalus/azorea/compare). Use the PR template.
 

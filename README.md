@@ -1,127 +1,125 @@
 # Azorea
 
-> **P2P multiplayer for Minecraft 1.21.1. Free, private, no infra required.**
+**Your world. Your friend. Nothing in the middle.**
 
-Azorea is a NeoForge mod that lets Minecraft players host and join games directly over the internet — without relying on any central server. When it works, it's direct P2P: your chunks travel straight to your friend's machine.
+Azorea is a NeoForge mod for Minecraft 1.21.1 that puts two singleplayer worlds in touch over the internet, directly. You host the world you already play. Your friend pastes an invite. If the networks allow it, the two machines talk to each other and the mod gets out of the way.
 
-## What it does
+No account to create. No server we keep running. That last part is the whole point: there is nothing on our end that can go down.
 
-- **Self-hosted games**: open your singleplayer world to a friend over the internet with a couple of clicks.
-- **Identity-based**: every player has a self-certifying `azorea_id` derived from their Ed25519 + X25519 keys. No accounts. No central registry.
-- **Invite-based join**: hosts share a signed invite bundle out-of-band (chat, Discord, email). The bundle contains the host's public endpoints + a signed token.
-- **Embedded tracker** for LAN discovery — works out of the box on the same router without configuring anything.
-- **No-premium gate**: when the host marks a world as "no-premium", joining players must prove possession of the Ed25519 key whose hash matches their claimed `azorea_id` — *before spawning*. Impersonation is cryptographically impossible.
+[![GitHub release](https://img.shields.io/github/v/release/CerebroCanibalus/azorea?label=release)](https://github.com/CerebroCanibalus/azorea/releases)
+[![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
+[![Modrinth](https://img.shields.io/badge/Modrinth-coming%20soon-lightgrey)](#where-to-get-it)
+[![CurseForge](https://img.shields.io/badge/CurseForge-coming%20soon-lightgrey)](#where-to-get-it)
 
-## Install
+*¿Prefieres español? → [README.es.md](README.es.md)*
 
-1. Install **NeoForge 21.1.250+** for Minecraft 1.21.1.
-2. Download `azorea-v1_21_1-X.Y.Z.jar` from [Releases](https://github.com/CerebroCanibalus/azorea/releases).
-3. Drop the jar into `~/.minecraft/mods/`.
-4. Launch Minecraft. Azorea appears:
-   - In the **pause menu** (button **B** → Azorea menu)
-   - In the **title screen** (icon **H** — Host config)
+## Where to get it
 
-### Host a game
+- **Modrinth** — coming soon <!-- TODO: https://modrinth.com/mod/azorea -->
+- **CurseForge** — coming soon <!-- TODO: https://www.curseforge.com/minecraft/mc-mods/azorea -->
+- **GitHub Releases** — [latest jar](https://github.com/CerebroCanibalus/azorea/releases)
 
-1. Open a singleplayer world.
-2. Press **B → Host Game**.
-4. Configure (game mode, difficulty, PvP, flight, MOTD...).
-5. Click **Start**.
-6. Click **Copy Invite** and send it to your friend via any channel.
+You need Minecraft 1.21.1 and NeoForge 21.1.250 or newer. Drop the jar in your `mods/` folder. You know the rest.
 
-### Join a game
+## Hosting a game
 
-1. Press **B → Join by Invite**.
-2. Paste the invite.
-3. If the network allows, you connect directly.
+Open a world. Press **B**. That's the way in — the key is rebindable, and a small **Host** icon sits in the top-right corner of the pause menu and the title screen if you prefer clicking.
 
-## Network requirements
+- **Host Game** opens the settings: game mode, difficulty, PvP, flight, cheats, MOTD, and the access mode (premium or no-premium, further down). Arrange the session how you want it, then hit **Start**.
+- **Copy Invite** hands you one string. Send it anywhere — Discord, WhatsApp, a text message. It carries your host's addresses and a signature. Your friend pastes it and connects.
 
-**To host over the internet**:
-- Open TCP port **25565** (or your configured port) on your NAT/router via **manual port-forward**.
-- UPnP works if your router allows it (most modern routers do).
-- **CGNAT** (carrier-grade NAT) will block this regardless of port-forward. The in-game "Network" panel tells you when your public IP is not reachable.
+The invite stands on its own. No tracker, no lobby, no third party. Whoever holds the string holds the door.
 
-**To join**: no inbound ports needed. If your friend has port-forward working, you connect directly.
+## Joining a game
 
-## Design decisions (honest)
+Press **B** → **Join by Invite**, paste, connect. Azorea reads the addresses inside the invite and tries them in order until one answers. On the same network it just works. Off it, what happens depends on the next section.
 
-Azorea is built on one core decision: **no infrastructure that we maintain**. The mod is the whole system — there's no Azorea-hosted relay, no Azorea-hosted rendezvous, no Azorea-hosted tracker. If you and your friend both have port-forward (or aren't behind CGNAT), you connect directly. If not, you don't.
+## What your network allows
 
-What this means in practice:
-- **No relay** ⇒ users behind CGNAT cannot host unless their ISP removes them from the pool, or they set up a third-party relay (not built-in).
-- **Browse Games** works on LAN out of the box. To browse games over the internet, the *user* adds a tracker URL to `config/azorea.toml` — anyone can run a tracker (`tracker-server/` is shipped standalone), but Azorea doesn't operate one for you.
+Here's the honest part, because it's where most "P2P" mods lie.
 
-This is a deliberate trade-off documented as `DA-10` in the project's design notes: the alternative (operating a relay) requires ongoing infrastructure that this project does not want to commit to.
+For two remote machines to meet directly, one of them has to be reachable. Azorea looks for a door on the host's side, in order:
 
-## Security
+1. **A port-forward you already have** on TCP 25565.
+2. **UPnP** — if the router lets the mod open the port for you.
+3. **NAT-PMP / PCP** — older automatic schemes, tried too.
+4. **Public IPv6** — no mapping needed, the address just goes in the invite.
 
-### Identity (`azorea-id`)
+Whatever it finds becomes the address in the invite. The joining side reaches back and, from then on, it's Minecraft's own direct TCP.
 
-`azorea_id` is computed deterministically from your Ed25519 + X25519 public keys:
+If none of those exist — you're behind carrier-grade NAT with no IPv6, say — Azorea won't invent a route. **There is no relay built in yet.** You'd need a port-forward, IPv6, or a third-party relay outside the mod. We'd rather say that plainly than hide it behind a spinner.
 
-```
-azorea_id = base32(SHA-256("azorea-id/v2" || ed25519_pub || x25519_pub || hw_commit)[:15])
-```
+## Premium and no-premium worlds
 
-The result is human-readable: `AZ-XXXXXX-XXXXXX-XXXXXX-XXXXXX`.
+**Premium** is the default and works like an online-mode server: the world checks players against Mojang. Your friend needs a normal, working Minecraft login.
 
-### Announcements are signed
+**No-premium** replaces that with an identity check Azorea runs itself. Before a player spawns, they prove they hold the Ed25519 key behind their `azorea_id`, and the host's world tracks who's who in `identities.json`. Handy when someone can't sign in with Mojang, or when you'd rather keep the account system out of it.
 
-Every announce carries:
-- `signingKey`: Ed25519 public key
-- `hwCommit`: hardware commit
-- `signature`: Ed25519 signature over a deterministic canonical (without the sign field, to avoid cyclic dependency)
+Either way, the host owns the list. Delete an entry and that player can register again. No bans baked in, no lockout.
 
-Trackers verify before accepting. Unsigned or tampered announces return `400`.
+## On the same network
 
-### No-premium gate
+With one router, Azorea finds neighbours by itself — install it on both machines and **Browse Games** lists the local sessions. No config, no addresses to type.
 
-In worlds marked `no-premium`, the host runs an Ed25519 challenge during the Minecraft configuration phase (before spawn):
-1. Host sends a random challenge.
-2. Joiner signs with the Ed25519 key whose hash matches their claimed `azorea_id`.
-3. Host verifies signature + auto-cert (derivation check) before allowing spawn.
+To browse over the internet you'd point the mod at a tracker in `config/azorea.toml`. Anyone can run one: there's a standalone `tracker-server/` in the repo. We don't operate one for you.
 
-The host is the authority for identities in their world. There is **no TOFU, no lockout**. Removing an identity from `<world>/azorea/identities.json` re-opens registration.
+## Does it work today?
 
-### Cryptographic primitives
+Yes for the intended path, and no for every network. Straight answer:
 
-| | |
+| Situation | |
 |---|---|
-| Ed25519 | signing — JDK built-in |
-| X25519 | ECDH for invite `encrypted_blob` — JDK built-in |
-| ChaCha20-Poly1305 | AEAD for invite `encrypted_blob` — JDK built-in |
-| SHA-256 | hashing — JDK built-in |
-| CSPRNG | `java.security.SecureRandom` for all key generation |
+| Same LAN | ✅ |
+| Remote, host has a port-forward or public IPv6 | ✅ |
+| Remote, host is behind CGNAT with no IPv6 | ❌ no relay yet |
+| Browsing games over the internet | needs your own tracker URL |
+| Identity check for no-premium worlds | ✅ |
 
-No external crypto dependencies.
+The first two rows are what we've tested end to end, across a few thousand kilometres and with up to a dozen players. The third is a real limit, not something we forgot.
 
-### What Azorea does NOT use
+## Security, in one paragraph
 
-- **No TLS** on the Minecraft protocol (Vanilla limitation — Minecraft itself is plaintext over TCP). Friends' IPs are visible to each other by design (P2P).
-- **No CORS / no web frontend**: the tracker is an HTTP API, not a browser-facing endpoint. CORS is not applicable.
-- **No user accounts / no central DB**: identity is purely local.
-
-## Compatibility
-
-| | |
-|---|---|
-| Minecraft | 1.21.1 |
-| NeoForge | 21.1.250+ |
-| Java | 21 |
-| Loader range | `[21.1,)` |
+Every player is an identity, not a username: `azorea_id` is derived from your keys, so nobody can claim to be you. Invites and announcements are signed with Ed25519. In no-premium worlds the identity proof happens before you spawn. All the crypto comes with the JDK — no third-party libraries. The full model, its limitations, and how to report a vulnerability live in [SECURITY.md](SECURITY.md).
 
 ## Building from source
 
+You need **JDK 21** and Git. Nothing else — Gradle ships with the wrapper.
+
 ```bash
-./gradlew :v1_21_1:build
+git clone https://github.com/CerebroCanibalus/azorea
+cd azorea
+
+./gradlew :v1_21_1:build         # the mod      → v1_21_1/build/libs/
+./gradlew :tracker-server:build  # the tracker  → tracker-server/build/libs/
 ```
 
-The jar lands in `v1_21_1/build/libs/`.
+To hack on it in a dev environment:
 
-## Reporting vulnerabilities
+```bash
+./gradlew :v1_21_1:runServer     # dedicated server
+./gradlew :v1_21_1:runClient     # client
+./gradlew :v1_21_1:runClient2    # second client, isolated game dir
+```
 
-Please file security issues via [GitHub Security Advisories](https://github.com/CerebroCanibalus/azorea/security/advisories/new) (private until patched). Do not file public issues for unpatched vulnerabilities.
+Tests:
+
+```bash
+./gradlew :v1_21_1:test                       # the mod
+./gradlew :tracker-server:test                # the tracker
+RUN_NETWORK_TESTS=1 ./gradlew :v1_21_1:test   # adds live STUN probes
+```
+
+Runs on Windows, macOS and Linux. Each run directory is isolated, so you can test two identities on one PC.
+
+## Contributing
+
+Bug reports and pull requests are welcome. Read [CONTRIBUTING.md](CONTRIBUTING.md) first — it's short. The gist:
+
+- **No central infrastructure.** Don't add code that hardcodes a URL to a service we'd have to run. That's a design line, not a preference.
+- **No telemetry, no phone-home.**
+- **GPL-3.0.** Opening a PR licenses your work the same way.
+- **Java 21**, NeoForge 21.1, ModDevGradle.
+- **Test what's clever.** The security-sensitive pieces — identity, invites, the access gate — are all covered; follow their lead.
 
 ## License
 

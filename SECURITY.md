@@ -48,10 +48,11 @@ These are **by design** or **out of scope**. Documented to avoid surprises.
 
 - **Vanilla MC protocol is plaintext over TCP.** This is a Minecraft limitation, not an Azorea choice. Friends' IPs are visible to each other (P2P).
 - **No central server / relay.** Azorea does not operate any infra. Users behind CGNAT cannot host unless their ISP removes them from the pool, or they set up a third-party relay (not built into Azorea).
-- **HTTP tracker traffic is plaintext.** The tracker is server-to-server only (mod-to-mod, never browser-facing). CORS does not apply. If you operate a tracker publicly, put it behind a reverse proxy that terminates TLS.
+- **HTTP tracker traffic is plaintext.** The tracker is server-to-server only (mod-to-mod, never browser-facing). CORS does not apply. If you operate a tracker publicly, put it behind a reverse proxy that terminates TLS — and if that proxy rewrites `X-Forwarded-For`, only then start the tracker with `-Dtracker.trust_forwarded_for=true`.
 - **LAN discovery is plaintext over UDP multicast.** Assumes LAN is trusted. Anyone on the same subnet sees your `azorea_id`, display name, tracker URL and bind address.
 - **No identity backup.** Losing `identity.json` means losing your `azorea_id` and all friends. Export/import UX is on the roadmap.
-- **`clientIp()` in the tracker honors `X-Forwarded-For`.** If you operate a tracker behind an untrusted reverse proxy, an attacker can spoof IPs and bypass per-IP rate limits. Document the trust boundary in your tracker deployment.
+- **`X-Forwarded-For` is ignored by default.** The standalone tracker uses the real TCP socket address for per-IP rate limiting unless you explicitly opt in with `-Dtracker.trust_forwarded_for=true`. Turning it on without a trusted proxy in front lets an attacker spoof IPs and bypass the limit.
+- **Tracker request bodies are capped.** The standalone tracker rejects bodies over 8 KB (`/announce`, `/presence`, `/invite`) or 64 KB (`/punch/announce`) with a `400`. The cap is enforced from `Content-Length` first, then by the actual byte count.
 
 ## Audits
 
