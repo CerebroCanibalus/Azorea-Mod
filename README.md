@@ -2,8 +2,6 @@
   <img src="assets/azorea_banner-export.png" alt="Azorea — true peer-to-peer multiplayer for Minecraft" width="550">
 </p>
 
-# Azorea
-
 **A real, automated and easy to use peer-to-peer multiplayer and hosting mod for Minecraft 1.21.1 with no account, free forever.**
 
 Azorea opens your singleplayer world to a friend across the internet and connects the two machines **directly**. Your chunks travel straight to your friend's game, not through a server either of you has to trust, rent or sign into. It is the same save you already play, and the same person you already know.
