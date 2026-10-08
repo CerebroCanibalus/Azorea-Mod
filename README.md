@@ -15,7 +15,7 @@ Azorea is a NeoForge mod that lets Minecraft players host and join games directl
 ## Install
 
 1. Install **NeoForge 21.1.250+** for Minecraft 1.21.1.
-2. Download `azorea-v1_21_1-X.Y.Z.jar` from [Releases](../../releases).
+2. Download `azorea-v1_21_1-X.Y.Z.jar` from [Releases](https://github.com/CerebroCanibalus/azorea/releases).
 3. Drop the jar into `~/.minecraft/mods/`.
 4. Launch Minecraft. Azorea appears:
    - In the **pause menu** (button **B** → Azorea menu)
@@ -121,7 +121,7 @@ The jar lands in `v1_21_1/build/libs/`.
 
 ## Reporting vulnerabilities
 
-Please file security issues via GitHub Security Advisories (private until patched). Do not file public issues for unpatched vulnerabilities.
+Please file security issues via [GitHub Security Advisories](https://github.com/CerebroCanibalus/azorea/security/advisories/new) (private until patched). Do not file public issues for unpatched vulnerabilities.
 
 ## License
 

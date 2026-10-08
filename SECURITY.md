@@ -11,7 +11,7 @@
 
 Please file security issues via **GitHub Security Advisories** (private until patched):
 
-> [Secret URI]
+> [https://github.com/CerebroCanibalus/azorea/security/advisories/new](https://github.com/CerebroCanibalus/azorea/security/advisories/new)
 
 **Do not file public issues for unpatched vulnerabilities.** Public disclosure before a fix is ready gives attackers a head start.
 
@@ -56,6 +56,14 @@ These are **by design** or **out of scope**. Documented to avoid surprises.
 ## Audits
 
 - **2026-10-07**: first audit against OWASP Top 10:2025 + Network Security guidance. No critical issues found. Full findings in `CHANGELOG.md` (entry titled "Security audit") and `AGENTS.md` (audit section).
+
+## Repository
+
+- **Repo**: `https://github.com/CerebroCanibalus/azorea` (will become public on first release)
+- **Default branch**: `main`
+- **License**: GPL-3.0 (`LICENSE` at repo root)
+- **Contributing**: see `CONTRIBUTING.md`
+- **Issue templates**: `.github/ISSUE_TEMPLATE/` (`bug_report.md`, `feature_request.md`)
 
 ## Bug Bounty
 
