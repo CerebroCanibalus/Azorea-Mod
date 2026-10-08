@@ -14,6 +14,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import com.azorea.mod.v1211.client.ui.AzoreaGui;
+
 import java.util.Optional;
 
 /**
@@ -146,7 +148,7 @@ public final class AzoreaMainScreen extends Screen {
         //   del título, ahora es EL título).
         if (this.minecraft.getResourceManager().getResource(LOGO).isPresent()) {
             final int xLogo = (this.width - LOGO_SIZE) / 2;
-            gui.blit(LOGO, xLogo, this.logoY, 0, 0, LOGO_SIZE, LOGO_SIZE, LOGO_SIZE, LOGO_SIZE);
+            AzoreaGui.blitTexture(gui, LOGO, xLogo, this.logoY, LOGO_SIZE, LOGO_SIZE, LOGO_SIZE, LOGO_SIZE);
         }
         super.render(gui, mouseX, mouseY, partialTicks);
     }

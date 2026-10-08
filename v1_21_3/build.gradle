@@ -1,0 +1,67 @@
+// v1_21_3/build.gradle — glue para Minecraft 1.21.3 + NeoForge 21.3.x.
+//
+// § PORTEO (sondeo): de momento este subproyecto COMPARTE el código fuente de v1_21_1
+//   vía srcDir, para que el compilador enumere exactamente qué rompe entre 1.21.1 y
+//   1.21.3. Cuando sepamos el delta real, se decide: duplicar el glue, extraer :common,
+//   o abstraer. NO duplicar a ciegas.
+//
+// § 1.21.2 y 1.21.3 comparten API vanilla (el primer oficial es "1.21.2/3 -> 1.21.4"),
+//   así que un único subproyecto cubre ambos.
+
+plugins {
+    id 'net.neoforged.moddev' version '2.0.146'
+}
+
+// § PORTEO: el grueso del código (red, tracker, cripto, GUI, eventos) compila
+//   idéntico en 1.21.1 y 1.21.3 ⇒ vive en mod-common/ y se comparte. Lo que
+//   difiere (shim de GUI, feature de debug) va en el overlay src/main/java.
+sourceSets.main.java.srcDir('../mod-common/main/java')
+sourceSets.main.java.srcDir('../shared/src/main/java')
+
+// § Tests compartidos (lógica pura + MC): los mismos que v1_21_1. Validan el port.
+sourceSets.test.java.srcDir('../v1_21_1/src/test/java')
+
+neoForge {
+    version = project.findProperty('neoForge_version_1_21_3')
+    validateAccessTransformers = true
+
+    runs {
+        client {
+            client()
+            gameDirectory = file('run/client')
+            programArguments = ['--username', 'Dev']
+        }
+        server {
+            server()
+            gameDirectory = file('run/server')
+        }
+    }
+
+    mods {
+        azorea {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.0'
+    testRuntimeOnly 'org.slf4j:slf4j-api:2.0.9'
+    testRuntimeOnly 'org.slf4j:slf4j-simple:2.0.9'
+    testImplementation 'com.google.code.gson:gson:2.11.0'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events 'passed', 'failed', 'skipped'
+        showStandardStreams = false
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}

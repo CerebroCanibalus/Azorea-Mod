@@ -89,7 +89,7 @@ public final class AzoreaMod {
         //   EntityType SIEMPRE se registra — el flag experimental ahora es
         //   ui.nametag_overlay (controla el AzoreaNametagRenderer del nametag
         //   real, no este debug entity).
-        com.azorea.mod.v1211.client.debug.AzoreaDebugNametagEntityType.ENTITY_TYPES.register(modBus);
+        com.azorea.mod.v1211.client.AzoreaDebug.register(modBus);
 
         // Game bus: comandos (debug only, ver AGENTS.md § DA-6) + watchdog del gate
         // + ciclo de vida del modo de acceso (F10/A3).

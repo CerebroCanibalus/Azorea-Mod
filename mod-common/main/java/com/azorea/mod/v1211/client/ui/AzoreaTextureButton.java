@@ -9,6 +9,8 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
+import com.azorea.mod.v1211.client.ui.AzoreaGui;
+
 /**
  * Botón que renderiza una textura única (no sprite sheet).
  *
@@ -53,30 +55,11 @@ public final class AzoreaTextureButton extends AbstractButton {
         } else if (this.isHoveredOrFocused()) {
             tint = 0xFFFFFFA0;  // amarillo claro
         }
-        // § FIX 2026-10-01 — tint en escala 0..1, ⊘ 0..255.
-        //
-        // GuiGraphics tiene UNA sola sobrecarga:
-        //     public void setColor(float, float, float, float)
-        //         → RenderSystem.setShaderColor(r, g, b, a)
-        // Pasarle (tint >> 16) & 0xFF = 255 ensanchaba a 255.0f ⇒ el fragment
-        // shader calculaba texel × 255 ⇒ TODO saturaba a blanco puro (el alfa se
-        // salvaba: 0 × 255 = 0, por eso quedaba una silueta blanca recortada).
-        // Síntoma real: "los íconos están totalmente blancos, no se ve su textura".
-        //
-        // Con 255.0f el disabled (0xA0) y el hover (0xA0 azul) también salían
-        // blancos — 0.63 × 255 = 160 → clamp 1.0 — con lo que desaparecía
-        // cualquier feedback de estado.
-        gui.setColor(
-                ((tint >> 16) & 0xFF) / 255.0f * this.alpha,
-                ((tint >> 8) & 0xFF) / 255.0f * this.alpha,
-                (tint & 0xFF) / 255.0f * this.alpha,
-                ((tint >> 24) & 0xFF) / 255.0f * this.alpha);
-        gui.blit(texture, this.getX(), this.getY(),
-                this.width, this.height,
-                0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
-        // § Restaurar SIEMPRE: setShaderColor es global y se filtra al resto del
-        // GUI si se deja tocado (p. ej. si blit lanzara).
-        gui.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+        // § FIX 2026-10-01 — tint en escala 0..1, ⊘ 0..255 (255.0f saturaba a
+        //   blanco puro y mataba el feedback de estado). El tint se aplica dentro
+        //   de AzoreaGui (setColor en 1.21.1, parámetro de color en 1.21.2+).
+        AzoreaGui.blitTextureTinted(gui, texture, this.getX(), this.getY(),
+                this.width, this.height, textureWidth, textureHeight, tint, this.alpha);
     }
 
     @Override

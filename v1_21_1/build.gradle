@@ -5,6 +5,11 @@ plugins {
     id 'net.neoforged.moddev' version '2.0.146'
 }
 
+// § PORTEO multi-versión: código compartido entre 1.21.1 y 1.21.3 (red, tracker,
+//   cripto, GUI, eventos). Una sola copia; cada versión aporta su overlay en
+//   src/main/java para los pocos ficheros que difieren.
+sourceSets.main.java.srcDir('../mod-common/main/java')
+
 // § DA-13: código compartido c/ `:tracker-server` (crypto d/ identidad + firma d/ punch).
 // UNA sola copia en disco, compilada en los DOS jars — ⊘ duplicar (el canónico d/ la firma
 // tiene q/ coincidir byte a byte y una copia q/ se desincronice falla EN SILENCIO).
