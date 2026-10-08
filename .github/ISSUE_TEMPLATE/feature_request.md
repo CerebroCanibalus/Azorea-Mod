@@ -17,7 +17,7 @@ What did you consider doing instead?
 
 ## Alignment with project direction
 
-Check the project's design decisions in `AGENTS.md` (sections **Decisiones arquitectónicas**). Specifically:
+Check the project's constraints in [CONTRIBUTING.md](../CONTRIBUTING.md). Specifically:
 - Does it require infrastructure Azorea would operate? (likely reject)
 - Does it require telemetry? (always reject)
 - Is it compatible with GPL-3.0?

@@ -16,7 +16,7 @@ If you ran a manual end-to-end test (e.g., WAN playtest), describe the setup.
 
 ## Design decisions
 
-If your change touches architecture, link the relevant `AGENTS.md` section (e.g., `DA-8`, `DA-13`). Briefly explain any new decisions.
+If your change touches architecture, explain the decision in the PR body and check it against the constraints in [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## Checklist
 
@@ -25,4 +25,4 @@ If your change touches architecture, link the relevant `AGENTS.md` section (e.g.
 - [ ] No hardcoded URLs to third-party infra.
 - [ ] New code has tests (if non-trivial).
 - [ ] `gradle.properties` and `neoforge.mods.toml` version synced (if release-relevant).
-- [ ] `AGENTS.md` / `CHANGELOG.md` updated.
+- [ ] User-visible behavior changes are reflected in `README.md` / `README.es.md`.

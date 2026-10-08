@@ -50,6 +50,12 @@ logs/
 vps/
 test-server/
 
+# Memoria interna del proyecto (NO publicar: contiene IPs, topologia y datos personales)
+AGENTS.md
+CHANGELOG.md
+COMPETENCIA.md
+DESCUBRIMIENTOS.md
+
 # Backups automaticos del editor
 *.bak
 *~

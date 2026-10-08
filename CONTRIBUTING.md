@@ -10,7 +10,7 @@ File a [bug report](https://github.com/CerebroCanibalus/azorea/issues/new?templa
 
 ## Proposing features
 
-Open a [feature request](https://github.com/CerebroCanibalus/azorea/issues/new?template=feature_request.md) describing the use case, not the implementation. The maintainers will discuss whether it aligns with the project's design decisions (DA-1..DA-14 in `AGENTS.md`).
+Open a [feature request](https://github.com/CerebroCanibalus/azorea/issues/new?template=feature_request.md) describing the use case, not the implementation. The maintainers will weigh it against the project's design constraints (listed below).
 
 ## Submitting changes
 
@@ -30,7 +30,7 @@ Azorea is opinionated. Some decisions are non-negotiable:
 - **ModDevGradle 2.x**, **Gradle 8.x**, **NeoForge 21.1.250+**.
 - **Single source of truth** for shared crypto: `shared/src/main/java/...` (DA-13). Don't duplicate it.
 
-The full decision log lives in `AGENTS.md` (sections **Decisiones arquitectónicas** and **Descubrimientos**). Read it before opening a feature PR.
+The constraints above are the ones that matter. If a design question isn't covered there, ask in the issue before writing code — it's cheaper than a rejected PR.
 
 ## Code style
 

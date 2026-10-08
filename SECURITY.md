@@ -56,7 +56,7 @@ These are **by design** or **out of scope**. Documented to avoid surprises.
 
 ## Audits
 
-- **2026-10-07**: first audit against OWASP Top 10:2025 + Network Security guidance. No critical issues found. Full findings in `CHANGELOG.md` (entry titled "Security audit") and `AGENTS.md` (audit section).
+- **2026-10-07**: first audit against OWASP Top 10:2025 + Network Security guidance. No critical issues found. Two medium findings — the tracker trusting `X-Forwarded-For`, and unbounded request bodies — were fixed in 1.4.11 and are documented under **Known Limitations** above.
 
 ## Repository
 
