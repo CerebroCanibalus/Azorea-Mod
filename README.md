@@ -11,13 +11,19 @@ Azorea opens your singleplayer world to a friend across the internet and connect
 
 *¿Prefieres español? → [README.es.md](README.es.md)*
 
+## Demo
+
+Two players in different cities, one direct connection:
+
+[▶ Watch the demo](assets/demo.mp4)
+
 ## Why you'd use it
 
 Most ways to play Minecraft with a friend put a server in the middle. Your game goes out to a machine someone else runs a paid host or a service that wants an account and from there to your friend. That server costs money, sees your traffic, adds a hop of latency, and can disappear the day its operator decides to close it.
 
 Azorea takes the other road. It connects the two machines **directly**, and keeps as little as possible between them:
 
-- **No account.** Identity is a generated from your disk.
+- **No account.** Identity is generated from your disk.
 - **No relay in the middle.** A direct connection is faster than one bounced through a third party, and your traffic goes from you to your friend and nowhere else.
 - **No dedicated server.** There is nothing we want to run in the middle of your game, so there is nothing on our side that can go down, change hands or start charging.
 - **Your world stays yours.** You host the save you already play, nothing is uploaded to anyone and you have full configuration over your world and host.
@@ -81,7 +87,7 @@ Azorea is a small mod, and these are the technical decisions that lead to it.
 
 **Identity.** Most multiplayer starts by asking a server "who is this?". With no server to ask, identity has to be something you can prove on your own. Your `azorea_id` is derived from your two keypairs — Ed25519 for signing, X25519 for key agreement — together with a hash of your hardware. Nothing assigns or registers it; it simply falls out of the keys. Anyone who holds your ID and public keys can check that all three agree, and that you hold the private half, without asking a third party. Because there is no register, no one can squat an ID and no authority can revoke one. The trade-off is that the identity lives in a local file, so losing that file means losing the identity, improvements are planned.
 
-**Invitations.** The string your friend pastes is is a encrypted and signed address that holds the host's endpoints, the host's Azorea ID, and an Ed25519 signature over the whole thing. When your friend's game reads it, it checks two facts: that the signature matches the host's key, and that the claimed ID really derives from the keys in the bundle. Together those stop a third party who sees the invite from quietly rewriting it to point at their own machine, because the signature covers the endpoints and the ID is pinned to the keys. Invitations sent through a tracker are additionally encrypted to the recipient's X25519 key with ChaCha20-Poly1305, so only the intended friend can read the addresses inside.
+**Invitations.** The string your friend pastes is an encrypted and signed address that holds the host's endpoints, the host's Azorea ID, and an Ed25519 signature over the whole thing. When your friend's game reads it, it checks two facts: that the signature matches the host's key, and that the claimed ID really derives from the keys in the bundle. Together those stop a third party who sees the invite from quietly rewriting it to point at their own machine, because the signature covers the endpoints and the ID is pinned to the keys. Invitations sent through a tracker are additionally encrypted to the recipient's X25519 key with ChaCha20-Poly1305, so only the intended friend can read the addresses inside.
 
 **A punch that keeps TCP.** When there is no open port to connect to, Azorea can open one by simultaneous open, both machines send from a chosen port at the same instant, and each NAT lets the traffic through as it sees the other's outbound packet. Many P2P tools drop to UDP at this point and rebuild reliability by hand. Azorea stays on TCP through a hole-punched socket as a real connection, and the operating system does the retransmitting. A small local proxy then bridges that socket to Minecraft. Nothing in the game itself is actually patched.
 
