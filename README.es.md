@@ -10,6 +10,8 @@ Azorea abre tu mundo de un jugador a un amigo por internet y conecta las dos má
 [![Licencia: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue)](LICENSE)
 [![Modrinth](https://img.shields.io/badge/Modrinth-pr%C3%B3ximamente-lightgrey)](#d%C3%B3nde-conseguirlo)
 [![CurseForge](https://img.shields.io/badge/CurseForge-pr%C3%B3ximamente-lightgrey)](#d%C3%B3nde-conseguirlo)
+[![Discord](https://img.shields.io/badge/Discord-%C3%BAnete-5865F2?logo=discord&logoColor=white)](https://discord.gg/pnDqUJY5e3)
+[![Patreon](https://img.shields.io/badge/Patreon-apoya-F96854?logo=patreon&logoColor=white)](https://www.patreon.com/WinVic)
 
 *Prefer English? → [README.md](README.md)*
 
@@ -136,6 +138,11 @@ Los informes de fallos y las pull requests son siempre (¡¡¡¡¡NUNCA!!!!!! ¡
 - **GPL-3.0.** Al abrir una pull request licencias tu trabajo igual.
 - **Java 21**, NeoForge 21.1, ModDevGradle.
 - **Tests para todo lo sutil.** La identidad, las invitaciones y la puerta de acceso están cubiertas; sigue su ejemplo.
+
+## Comunidad y apoyo
+
+- **Discord** — dudas, informes de fallos o encontrar con quién jugar: [discord.gg/pnDqUJY5e3](https://discord.gg/pnDqUJY5e3)
+- **Patreon** — si Azorea te resulta útil, esto ayuda a que siga gratis para todos: [patreon.com/WinVic](https://www.patreon.com/WinVic)
 
 ## Licencia
 
